@@ -46,12 +46,12 @@ cN =length(cyt_x);
 theta_90 = pi/2;
 theta_180 = pi;
 %spring constant for rotational spring
-k_theta = 6;
-k_theta_flank = 6;
+k_theta = .006;
+k_theta_flank = .006;
 %spring constant for linear springs
 %different on flanks vs. ends
-k_spring_flank = 20;
-k_spring_ends = 20;
+k_spring_flank = 2;
+k_spring_ends = 2;
 %linear spring neutral length
 spring_l_not = .0625;
 
