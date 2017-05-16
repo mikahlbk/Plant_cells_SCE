@@ -50,8 +50,8 @@ k_theta = 6;
 k_theta_flank = 6;
 %spring constant for linear springs
 %different on flanks vs. ends
-k_spring_flank = 20;
-k_spring_ends = 20;
+k_spring_flank = 6;
+k_spring_ends = 30;
 %linear spring neutral length
 spring_l_not = .0625;
 
