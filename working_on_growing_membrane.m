@@ -50,7 +50,7 @@ k_theta = 6;
 k_theta_flank = 6;
 %spring constant for linear springs
 %different on flanks vs. ends
-k_spring_flank = 6;
+k_spring_flank = 20;
 k_spring_ends = 20;
 %linear spring neutral length
 spring_l_not = .0625;
@@ -68,16 +68,17 @@ xsi_MI = .125;
 gamma_MI = .625;
 
 %time vector
-dt = .0003;
-num_steps = 500;
+dt = .003;
+num_steps = 1000;
 t = [0:dt:num_steps];
 
 %halfway through time vector
 halfway = ceil(length(t)/2);
-time_points = ceil(length(t)/10000);
-num_plots = 10;
-mult = 34;
+time_points = ceil(length(t)/100);
+num_plots = 100;
+mult = 4;
 plotter = 0;
+growth = 0;
 
 %array to hold changing node positions of wall
 wall_nodes_x = zeros(mult*wN, 1);
@@ -236,43 +237,48 @@ F_sum_cyt_y = zeros(mult*cN,1);
 
 
 %run it
-for m = 1:80000
-    
-    if(mod(m,200) == 0)
-         wN = wN+1;
-         [M,I] = max(right_lengths);
-         if (I < corner_vec(2))
-             corner_vec(2:4) = corner_vec(2:4) +1;
-         elseif (I >= corner_vec(2))&&(I< corner_vec(3))
-             corner_vec(3:4) = corner_vec(3:4) +1;
-         elseif (I >= corner_vec(3)) && (I<corner_vec(4))
-             corner_vec(4) = corner_vec(4) +1;
-         end
-         if (I == wN-1)
-             new_wall_node_x = (wall_nodes_x(1,1)+wall_nodes_x(wN-1,1))/2;
-             new_wall_node_y = (wall_nodes_y(1,1)+wall_nodes_y(wN-1,1))/2;
-             wall_nodes_x(wN,1) = new_wall_node_x;
-             wall_nodes_y(wN,1) = new_wall_node_y;
-         else
-            new_wall_node_x = (wall_nodes_x(I+1,1)+wall_nodes_x(I,1))/2;
-            new_wall_node_y = (wall_nodes_y(I+1,1)+wall_nodes_y(I,1))/2;
-            wall_nodes_x(I+2:wN) = wall_nodes_x(I+1:wN-1);
-            wall_nodes_y(I+2:wN) = wall_nodes_y(I+1:wN-1);
-            wall_nodes_x(I+1,1) = new_wall_node_x;
-            wall_nodes_y(I+1,1) = new_wall_node_y;
-         end
-    end
-  
-    
-    if (mod(m,5000) == 0)
+for m = 1:length(t)-1
+     if (m < 16666)
+         growth = 1;
+     else
+         growth = 0;
+     end
+     if (growth)
+%     if(mod(m,200) == 0)
+%          wN = wN+1;
+%          [M,I] = max(right_lengths);
+%          if (I < corner_vec(2))
+%              corner_vec(2:4) = corner_vec(2:4) +1;
+%          elseif (I >= corner_vec(2))&&(I< corner_vec(3))
+%              corner_vec(3:4) = corner_vec(3:4) +1;
+%          elseif (I >= corner_vec(3)) && (I<corner_vec(4))
+%              corner_vec(4) = corner_vec(4) +1;
+%          end
+%          if (I == wN-1)
+%              new_wall_node_x = (wall_nodes_x(1,1)+wall_nodes_x(wN-1,1))/2;
+%              new_wall_node_y = (wall_nodes_y(1,1)+wall_nodes_y(wN-1,1))/2;
+%              wall_nodes_x(wN,1) = new_wall_node_x;
+%              wall_nodes_y(wN,1) = new_wall_node_y;
+%          else
+%             new_wall_node_x = (wall_nodes_x(I+1,1)+wall_nodes_x(I,1))/2;
+%             new_wall_node_y = (wall_nodes_y(I+1,1)+wall_nodes_y(I,1))/2;
+%             wall_nodes_x(I+2:wN) = wall_nodes_x(I+1:wN-1);
+%             wall_nodes_y(I+2:wN) = wall_nodes_y(I+1:wN-1);
+%             wall_nodes_x(I+1,1) = new_wall_node_x;
+%             wall_nodes_y(I+1,1) = new_wall_node_y;
+%          end
+%     end
+%   
+%     
+    if (mod(m,1666) == 0)
         cN = cN+1;
         CurrentCellRadius = min(wall_nodes_x(corner_vec(4),1), wall_nodes_y(corner_vec(2),1));
         random_angles = 2*pi*rand(1,1);
         random_radius = CurrentCellRadius*rand(1,1);
         cyt_nodes_x(cN,1) = random_radius.*cos(random_angles);
         cyt_nodes_y(cN,1) = random_radius.*sin(random_angles);
-     end
-
+    end
+    end
 %%%%compute updated vectors
     %vectors for linear and rotational spring functions
     %these are the x values of the vectors to the left of each wall node
