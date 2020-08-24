@@ -1,10 +1,9 @@
+%% This code uses SCE model to simulate one plant cell
+%%It models the cell wall nodes interacting with cytoplasm nodes
+%%Author: Mikahl Banwarth-Kuhn
 clear all
 clc
 close all
-
-% %This code uses SCE model to simulate a plant cell
-% %It models the cell wall interacting with cytoplasm
-% %Along with cell and wall growth
 
 %initial wall node placement
 %number of nodes on membrane at t=0
@@ -68,8 +67,8 @@ xsi_MI = .125;
 gamma_MI = .625;
 
 %time vector
-dt = .003;
-num_steps = 1000;
+dt = .0003;
+num_steps = 10;
 t = [0:dt:num_steps];
 
 %halfway through time vector
@@ -244,32 +243,32 @@ for m = 1:length(t)-1
          growth = 0;
      end
      if (growth)
-%     if(mod(m,200) == 0)
-%          wN = wN+1;
-%          [M,I] = max(right_lengths);
-%          if (I < corner_vec(2))
-%              corner_vec(2:4) = corner_vec(2:4) +1;
-%          elseif (I >= corner_vec(2))&&(I< corner_vec(3))
-%              corner_vec(3:4) = corner_vec(3:4) +1;
-%          elseif (I >= corner_vec(3)) && (I<corner_vec(4))
-%              corner_vec(4) = corner_vec(4) +1;
-%          end
-%          if (I == wN-1)
-%              new_wall_node_x = (wall_nodes_x(1,1)+wall_nodes_x(wN-1,1))/2;
-%              new_wall_node_y = (wall_nodes_y(1,1)+wall_nodes_y(wN-1,1))/2;
-%              wall_nodes_x(wN,1) = new_wall_node_x;
-%              wall_nodes_y(wN,1) = new_wall_node_y;
-%          else
-%             new_wall_node_x = (wall_nodes_x(I+1,1)+wall_nodes_x(I,1))/2;
-%             new_wall_node_y = (wall_nodes_y(I+1,1)+wall_nodes_y(I,1))/2;
-%             wall_nodes_x(I+2:wN) = wall_nodes_x(I+1:wN-1);
-%             wall_nodes_y(I+2:wN) = wall_nodes_y(I+1:wN-1);
-%             wall_nodes_x(I+1,1) = new_wall_node_x;
-%             wall_nodes_y(I+1,1) = new_wall_node_y;
-%          end
-%     end
-%   
-%     
+    if(mod(m,200) == 0)
+         wN = wN+1;
+         [M,I] = max(right_lengths);
+         if (I < corner_vec(2))
+             corner_vec(2:4) = corner_vec(2:4) +1;
+         elseif (I >= corner_vec(2))&&(I< corner_vec(3))
+             corner_vec(3:4) = corner_vec(3:4) +1;
+         elseif (I >= corner_vec(3)) && (I<corner_vec(4))
+             corner_vec(4) = corner_vec(4) +1;
+         end
+         if (I == wN-1)
+             new_wall_node_x = (wall_nodes_x(1,1)+wall_nodes_x(wN-1,1))/2;
+             new_wall_node_y = (wall_nodes_y(1,1)+wall_nodes_y(wN-1,1))/2;
+             wall_nodes_x(wN,1) = new_wall_node_x;
+             wall_nodes_y(wN,1) = new_wall_node_y;
+         else
+            new_wall_node_x = (wall_nodes_x(I+1,1)+wall_nodes_x(I,1))/2;
+            new_wall_node_y = (wall_nodes_y(I+1,1)+wall_nodes_y(I,1))/2;
+            wall_nodes_x(I+2:wN) = wall_nodes_x(I+1:wN-1);
+            wall_nodes_y(I+2:wN) = wall_nodes_y(I+1:wN-1);
+            wall_nodes_x(I+1,1) = new_wall_node_x;
+            wall_nodes_y(I+1,1) = new_wall_node_y;
+         end
+    end
+  
+    
     if (mod(m,1666) == 0)
         cN = cN+1;
         CurrentCellRadius = min(wall_nodes_x(corner_vec(4),1), wall_nodes_y(corner_vec(2),1));
@@ -535,35 +534,35 @@ for m = 1:length(t)-1
 
 end
 
-% %PLOTTING
+%PLOTTING
 %  wall_nodes_x_plot = [wall_nodes_x_plot(1:wN,1) ; wall_nodes_x_plot(1,1)];
 %  wall_nodes_y_plot = [wall_nodes_y_plot(1:wN,1) ; wall_nodes_y_plot(1,1)];
 
-%%%to plot with static axis size
-% figure
-% h = plot(NaN, NaN, '-go'); %// empty plot
-% hold on
-% g = plot(NaN, NaN, 'r*');
-% axis([-2 2 -2 2])
-% axis manual %// this line freezes the axes
-% for i = 1:1000
-% x = wall_nodes_x_plot(:,i);
-% y = wall_nodes_y_plot(:,i);
-% p = cyt_nodes_x_plot(1:cN, i);
-% m= cyt_nodes_y_plot(1:cN,i);
-% set(h, 'XData', x, 'YData', y)
-% 
-% set(g, 'XData', p, 'YData',m)
-% pause(.001);
-% end
+%to plot with static axis size
+figure
+h = plot(NaN, NaN, '-go'); %// empty plot
+hold on
+g = plot(NaN, NaN, 'r*');
+%axis([-2 2 -2 2])
+%axis manual %// this line freezes the axes
+for i = 1:1000
+x = wall_nodes_x_plot(:,i);
+y = wall_nodes_y_plot(:,i);
+p = cyt_nodes_x_plot(1:cN, i);
+m= cyt_nodes_y_plot(1:cN,i);
+set(h, 'XData', x, 'YData', y)
 
-%%%to plot changing axis size
-%figure
+set(g, 'XData', p, 'YData',m)
+pause(.1);
+end
+
+%%to plot changing axis size
+% figure
 % for i=1:length(t)
 %   plot(wall_nodes_x_plot(:,i), wall_nodes_y_plot(:,i), '-go')
 %   hold on
 %   plot(cyt_nodes_x(:,i), cyt_nodes_y(:,i), 'r*')
-%   pause(.001);
+%   pause(1);
 %   hold off
 %      
 % end
